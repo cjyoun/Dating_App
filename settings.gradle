@@ -10,6 +10,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        jcenter() // cardStackView 추가
+        maven { url 'https://jitpack.io' } // cardStackView 추가
     }
 }
 rootProject.name = "DatingApp"
