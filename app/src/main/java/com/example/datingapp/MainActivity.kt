@@ -90,8 +90,10 @@ class MainActivity : AppCompatActivity() {
                 // 가져오는 데이터의 자식데이터들을 하나씩 받아오기
                 for(dataModel in dataSnapshot.children){
                     val user = dataModel.getValue(UserInfoModel::class.java)
+                    userDataList.add(user!!)
                 }
 
+                cardStackAdapter.notifyDataSetChanged() // 동기화 시켜주기
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
