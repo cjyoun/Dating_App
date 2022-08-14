@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.ImageView
 import com.example.datingapp.auth.IntroActivity
 import com.example.datingapp.auth.UserInfoModel
+import com.example.datingapp.setting.SettingActivity
 import com.example.datingapp.slider.CardStackAdapter
 import com.example.datingapp.utils.FirebaseRef
 import com.google.firebase.auth.ktx.auth
@@ -61,17 +62,14 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        // 로그아웃 하기
-        val logout = findViewById<ImageView>(R.id.logoutBtn)
-        logout.setOnClickListener {
 
-            val auth = Firebase.auth
-            auth.signOut()
 
-            val intent = Intent(this, IntroActivity::class.java)
+        val setting = findViewById<ImageView>(R.id.goSettingBtn)
+        setting.setOnClickListener {
+
+            val intent = Intent(this, SettingActivity::class.java)
             startActivity(intent)
         }
-
 
         cardStackAdapter = CardStackAdapter(baseContext, userDataList)
         cardStackView.layoutManager = manager

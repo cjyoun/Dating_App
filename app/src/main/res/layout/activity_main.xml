@@ -12,7 +12,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/logoutBtn"
+            android:id="@+id/goSettingBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="3dp"
