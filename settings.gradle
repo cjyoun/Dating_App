@@ -4,6 +4,8 @@ pluginManagement {
         google()
         mavenCentral()
     }
+
+
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
@@ -13,6 +15,7 @@ dependencyResolutionManagement {
         jcenter() // cardStackView 추가
         maven { url 'https://jitpack.io' } // cardStackView 추가
     }
+
 }
 rootProject.name = "DatingApp"
 include ':app'

@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services' // firebase 사용
 }
 
 android {
@@ -29,6 +30,8 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+
 }
 
 dependencies {
@@ -43,5 +46,12 @@ dependencies {
 
     // cardStackView
     implementation "com.yuyakaido.android:card-stack-view:2.3.4"
+
+    // firebase
+    implementation platform('com.google.firebase:firebase-bom:30.3.2')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+
+    // firebase email 인증
+    implementation 'com.google.firebase:firebase-auth-ktx'
 
 }
