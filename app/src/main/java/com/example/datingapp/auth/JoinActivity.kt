@@ -1,6 +1,8 @@
 package com.example.datingapp.auth
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +18,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
+import java.io.ByteArrayOutputStream
 
 class JoinActivity : AppCompatActivity() {
 
@@ -29,12 +33,13 @@ class JoinActivity : AppCompatActivity() {
     private var city = ""       // 지역 값
     private var age = ""        // 나이 값값
 
+    private lateinit var profileImage :ImageView // 프로필 이미지
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_join)
 
-        val profileImage = findViewById<ImageView>(R.id.joinImageArea)
-
+        profileImage = findViewById<ImageView>(R.id.joinImageArea)
         // 핸드폰 내에 파일함 열기
         // 최근에 핸드폰으로 다운받았던 사진이 나옴
         // 더보기 창을 통해 갤러리, 드라이브 등의 어플을 열 수 있고 어플을 클릭하여 사진을 선택하면 그 사진을 불러옴
@@ -88,6 +93,9 @@ class JoinActivity : AppCompatActivity() {
                         // database에 담기
                         FirebaseRef.userInfoRef.child(uid).setValue(userInfo)
 
+                        // storage에 uid 이름으로 이미지 업로드
+                        imageUpload(uid)
+
                         val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
 
@@ -98,8 +106,28 @@ class JoinActivity : AppCompatActivity() {
                 }
         }
 
+    }
 
 
+    // firebase storage에 이미지 업로드 (uid 이름으로)
+    private fun imageUpload(uid: String){
 
+        val storage = Firebase.storage
+        val storageRef = storage.reference.child("$uid.png")
+
+        profileImage.isDrawingCacheEnabled = true
+        profileImage.buildDrawingCache()
+        val bitmap = (profileImage.drawable as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+
+        var uploadTask = storageRef.putBytes(data)
+        uploadTask.addOnFailureListener {
+            // Handle unsuccessful uploads
+        }.addOnSuccessListener { taskSnapshot ->
+            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+            // ...
+        }
     }
 }

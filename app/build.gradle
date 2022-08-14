@@ -54,7 +54,10 @@ dependencies {
     // firebase email 인증
     implementation 'com.google.firebase:firebase-auth-ktx'
 
-    // friebase Realtime Database
+    // firebase Realtime Database
     implementation 'com.google.firebase:firebase-database-ktx'
+
+    // firebase storage
+    implementation 'com.google.firebase:firebase-storage-ktx'
 
 }
