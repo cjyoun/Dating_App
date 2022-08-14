@@ -27,7 +27,7 @@ class MyPageActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_page)
 
-
+        getMyData()
     }
 
     private fun getMyData(){
@@ -41,7 +41,7 @@ class MyPageActivity : AppCompatActivity() {
 
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-
+                Log.d(TAG, dataSnapshot.toString())
                 val data = dataSnapshot.getValue(UserInfoModel::class.java)
 
                 myUid.text = data!!.uid
