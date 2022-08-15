@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
 
                 // userCount가 가져온 user데이터 만큼 되면
                 if(userCount == userDataList.count()){
-                    getUserData(currentGender)
+                    getUserDataList(currentGender)
                     Toast.makeText(this@MainActivity, "유저를 새롭게 받아오기", Toast.LENGTH_LONG).show()
                 }
 
@@ -118,8 +118,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    // firebase 유저 데이터 가져오기 (성별에 따른 유저 리스트 가져오기 )u
-    private fun getUserData(currentGender : String){
+    // firebase 유저 데이터 가져오기 (성별에 따른 유저 리스트 가져오기 )
+    private fun getUserDataList(currentGender : String){
 
         val postListener = object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity() {
 
                 Log.d(TAG,data?.gender.toString())
                 currentGender = data?.gender.toString()
-                getUserData(currentGender)    // 성별에 따른 유저 리스트 가져오기
+                getUserDataList(currentGender)    // 성별에 따른 유저 리스트 가져오기
             }
 
             override fun onCancelled(databaseError: DatabaseError) {

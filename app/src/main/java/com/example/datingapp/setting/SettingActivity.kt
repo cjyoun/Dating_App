@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import com.example.datingapp.R
 import com.example.datingapp.auth.IntroActivity
+import com.example.datingapp.message.MyLikeListActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -32,5 +33,12 @@ class SettingActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // 나의 좋아요 리스트로 이동하기
+        val myLikeBtn = findViewById<Button>(R.id.myLikeBtn)
+        myLikeBtn.setOnClickListener {
+
+            val intent = Intent(this, MyLikeListActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
