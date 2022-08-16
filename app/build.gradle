@@ -67,4 +67,11 @@ dependencies {
     // firebase console에서 메세지 보내기
     implementation 'com.google.firebase:firebase-messaging-ktx'
 
+    // retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    // retrofit gson
+    implementation 'com.squareup.retrofit2:converter-gson:2.2.0'
+    // coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+
 }
