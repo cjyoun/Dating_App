@@ -39,20 +39,5 @@ class SplashActivity : AppCompatActivity() {
         }
 
 
-        // 토큰 값 받기
-        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
-            if (!task.isSuccessful) {
-                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
-                return@OnCompleteListener
-            }
-
-            // Get new FCM registration token
-            val token = task.result
-
-            Log.d(TAG, "token - $token")
-        })
-
-
-
     }
 }
