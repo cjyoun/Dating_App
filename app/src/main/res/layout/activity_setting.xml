@@ -21,6 +21,12 @@
         android:layout_height="wrap_content"/>
 
     <Button
+        android:id="@+id/myMsgBtn"
+        android:text="내가 받은 메세지"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
         android:id="@+id/logoutBtn"
         android:text="로그아웃"
         android:layout_width="match_parent"

@@ -7,6 +7,7 @@ import android.widget.Button
 import com.example.datingapp.R
 import com.example.datingapp.auth.IntroActivity
 import com.example.datingapp.message.MyLikeListActivity
+import com.example.datingapp.message.MyMsgActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -38,6 +39,14 @@ class SettingActivity : AppCompatActivity() {
         myLikeBtn.setOnClickListener {
 
             val intent = Intent(this, MyLikeListActivity::class.java)
+            startActivity(intent)
+        }
+
+        // 내가 받은 메세지로 이동하기
+        val myMsgBtn = findViewById<Button>(R.id.myMsgBtn)
+        myMsgBtn.setOnClickListener {
+
+            val intent = Intent(this, MyMsgActivity::class.java)
             startActivity(intent)
         }
     }

@@ -23,10 +23,11 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
+        </service> <!-- ================================ -->
 
-        </service>
-        <!-- ================================ -->
-
+        <activity
+            android:name=".message.MyMsgActivity"
+            android:exported="false" />
         <activity
             android:name=".message.MyLikeListActivity"
             android:exported="false" />

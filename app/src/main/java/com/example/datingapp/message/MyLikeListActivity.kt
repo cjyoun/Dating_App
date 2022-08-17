@@ -36,6 +36,7 @@ class MyLikeListActivity : AppCompatActivity() {
     lateinit var listViewAdapter : MyLikeListViewAdapter
 
     lateinit var getterUid : String //메세지를 받는 사람의 uid
+    lateinit var getterToken : String //메세지를 받는 사람의 token
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,6 +67,7 @@ class MyLikeListActivity : AppCompatActivity() {
             // 리스트 선택한 사람이 나를 좋아요 했는지 체크
             checkMatching(likeUserDataList[position].uid)
             getterUid = likeUserDataList[position].uid  // 클릭한사람(=받는사람)의 uid 입력
+            getterToken = likeUserDataList[position].token  // 클릭한사람(=받는사람)의 token 입력
 
             return@setOnItemLongClickListener(true)
         }
@@ -183,12 +185,21 @@ class MyLikeListActivity : AppCompatActivity() {
         val btn = mAlertDialog.findViewById<Button>(R.id.sendTextBtn)
         btn?.setOnClickListener {
 
+            val msgTxt = textArea!!.text.toString()
+
             // 내 uid와 닉네임, 보내는 텍스트 내용을 담음
             val msgModel = MsgModel(uid, MyInfo.myNickname, textArea!!.text.toString())
 
             // 내가 클릭한 사람의 uid 값 밑에 보낸사람과 메세지 값 넣기
             // .push()를 쓰면 누를 때마다 쌓임 (같은 정보여도)
             FirebaseRef.userMsgRef.child(getterUid).push().setValue(msgModel)
+
+            // PUSH 를 보낼 때 제목과 내용
+            val notiModel = NotiModel(MyInfo.myNickname,msgTxt)
+            // 내가 선택한 사람의 토큰을 가지고 notiModel값을 담음
+            val pushModel = PushNotification(notiModel, getterToken)
+            // 다른 사람에게 메세지 보내기
+            testPush(pushModel)
 
             mAlertDialog.dismiss() // Dialog 끄기
         }
