@@ -25,9 +25,14 @@ class FirebaseService : FirebaseMessagingService(){
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
 
-        Log.d(TAG, "title - ${message.notification?.title.toString()} / body - ${message.notification?.body.toString()} ")
-        val title = message.notification?.title.toString()
-        val body = message.notification?.body.toString()
+        // 이 방법은 Firebase console에서 메세지 보낼 때 제목과 내용
+//        Log.d(TAG, "title - ${message.notification?.title.toString()} / body - ${message.notification?.body.toString()} ")
+//        val title = message.notification?.title.toString()
+//        val body = message.notification?.body.toString()
+
+        // Retrofit을 이용해서 앱에서 다른 사람에게 보낼 때 제목과 내용 (NoTiModel에 담은 내용 - MyLikeListActivity에서 담음)
+        val title = message.data["title"].toString()
+        val body = message.data["content"].toString()
 
         // Firebase에서 보낸 메세지를 앱에서 notification 알람 띄워줌
         createNotificationChannel()

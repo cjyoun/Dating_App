@@ -7,11 +7,17 @@ import android.widget.ListView
 import android.widget.Toast
 import com.example.datingapp.R
 import com.example.datingapp.auth.UserInfoModel
+import com.example.datingapp.message.fcm.NotiModel
+import com.example.datingapp.message.fcm.PushNotification
+import com.example.datingapp.message.fcm.RetrofitInstance
 import com.example.datingapp.utils.FirebaseAuthUtils
 import com.example.datingapp.utils.FirebaseRef
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 // 내가 좋아요한 사람들이 나를 좋아요 한 리스트 (매칭된 리스트)
 class MyLikeListActivity : AppCompatActivity() {
@@ -38,6 +44,13 @@ class MyLikeListActivity : AppCompatActivity() {
             Log.d(TAG, "리스트 클릭 - " + likeUserDataList[position].uid)
             // 리스트 선택한 사람이 나를 좋아요 했는지 체크
             checkMatching(likeUserDataList[position].uid)
+
+            // PUSH 를 보낼 때 제목과 내용
+            val notiModel = NotiModel("a","b")
+            // 내가 선택한 사람의 토큰을 가지고 notiModel값을 담음
+            val pushModel = PushNotification(notiModel, likeUserDataList[position].token.toString())
+            // 다른 사람에게 메세지 보내기
+            testPush(pushModel)
 
         }
 
@@ -123,6 +136,15 @@ class MyLikeListActivity : AppCompatActivity() {
             }
         }
         FirebaseRef.userLikeRef.child(otherUid).addValueEventListener(postListener)
+    }
+
+
+    // PUSH 메세지 보내기
+    private fun testPush(notification : PushNotification) = CoroutineScope(Dispatchers.IO).launch {
+
+        RetrofitInstance.api.postNotification(notification)
+        Toast.makeText(baseContext, "상대방에게 PUSh를 날렸습니다.", Toast.LENGTH_LONG).show()
+
     }
 
 }
