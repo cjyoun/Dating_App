@@ -20,6 +20,7 @@ import com.example.datingapp.setting.SettingActivity
 import com.example.datingapp.slider.CardStackAdapter
 import com.example.datingapp.utils.FirebaseAuthUtils
 import com.example.datingapp.utils.FirebaseRef
+import com.example.datingapp.utils.MyInfo
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -159,6 +160,9 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG,data?.gender.toString())
                 currentGender = data?.gender.toString()
                 getUserDataList(currentGender)    // 성별에 따른 유저 리스트 가져오기
+
+                MyInfo.myNickname = data?.nickname.toString()   // MyInfo 라는 util 클래스 안에 닉네임 넣기
+
             }
 
             override fun onCancelled(databaseError: DatabaseError) {

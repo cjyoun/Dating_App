@@ -3,8 +3,12 @@ package com.example.datingapp.message
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ListView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.example.datingapp.R
 import com.example.datingapp.auth.UserInfoModel
 import com.example.datingapp.message.fcm.NotiModel
@@ -12,6 +16,7 @@ import com.example.datingapp.message.fcm.PushNotification
 import com.example.datingapp.message.fcm.RetrofitInstance
 import com.example.datingapp.utils.FirebaseAuthUtils
 import com.example.datingapp.utils.FirebaseRef
+import com.example.datingapp.utils.MyInfo
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
@@ -30,6 +35,8 @@ class MyLikeListActivity : AppCompatActivity() {
 
     lateinit var listViewAdapter : MyLikeListViewAdapter
 
+    lateinit var getterUid : String //메세지를 받는 사람의 uid
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_like_list)
@@ -40,20 +47,28 @@ class MyLikeListActivity : AppCompatActivity() {
         listViewAdapter = MyLikeListViewAdapter(this, likeUserDataList)
         userListView.adapter = listViewAdapter
 
-        userListView.setOnItemClickListener { parent, view, position, id ->
-            Log.d(TAG, "리스트 클릭 - " + likeUserDataList[position].uid)
+//        userListView.setOnItemClickListener { parent, view, position, id ->
+//            Log.d(TAG, "리스트 클릭 - " + likeUserDataList[position].uid)
+//            // 리스트 선택한 사람이 나를 좋아요 했는지 체크
+//            checkMatching(likeUserDataList[position].uid)
+//
+//            // PUSH 를 보낼 때 제목과 내용
+//            val notiModel = NotiModel("a","b")
+//            // 내가 선택한 사람의 토큰을 가지고 notiModel값을 담음
+//            val pushModel = PushNotification(notiModel, likeUserDataList[position].token.toString())
+//            // 다른 사람에게 메세지 보내기
+//            testPush(pushModel)
+//
+//        }
+
+        // 길게 클릭하는 이벤트
+        userListView.setOnItemLongClickListener { parent, view, position, id ->
             // 리스트 선택한 사람이 나를 좋아요 했는지 체크
             checkMatching(likeUserDataList[position].uid)
+            getterUid = likeUserDataList[position].uid  // 클릭한사람(=받는사람)의 uid 입력
 
-            // PUSH 를 보낼 때 제목과 내용
-            val notiModel = NotiModel("a","b")
-            // 내가 선택한 사람의 토큰을 가지고 notiModel값을 담음
-            val pushModel = PushNotification(notiModel, likeUserDataList[position].token.toString())
-            // 다른 사람에게 메세지 보내기
-            testPush(pushModel)
-
+            return@setOnItemLongClickListener(true)
         }
-
 
     }
 
@@ -114,13 +129,18 @@ class MyLikeListActivity : AppCompatActivity() {
 
                 // 선택한 사람이 좋아요를 한명도 안했을 경우
                 if( dataSnapshot.children.count() == 0){
-                    Toast.makeText(this@MyLikeListActivity,"매칭이 되지 않았습니다.",Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MyLikeListActivity,"상대방이 좋아요 한 사람이 아무도 없습니다.",Toast.LENGTH_LONG).show()
                 } else{
                     for(dataModel in dataSnapshot.children){
                         val likeUserKey = dataModel.key.toString()
                         // 선택한 사람의 좋아요 한 사람 리스트중에 내 uid가 있을 경우
                         if(likeUserKey == uid){
                             Toast.makeText(this@MyLikeListActivity,"매칭이 되었습니다.",Toast.LENGTH_LONG).show()
+
+                            // Dialog 띄우기
+                            showDialog()
+
+
                         }else{
                             Toast.makeText(this@MyLikeListActivity,"매칭이 되지 않았습니다.",Toast.LENGTH_LONG).show()
                         }
@@ -144,6 +164,34 @@ class MyLikeListActivity : AppCompatActivity() {
 
         RetrofitInstance.api.postNotification(notification)
         Toast.makeText(baseContext, "상대방에게 PUSh를 날렸습니다.", Toast.LENGTH_LONG).show()
+
+    }
+
+
+    // Dialog 띄우기
+    private fun showDialog(){
+
+        val mDialogView = LayoutInflater.from(this).inflate(R.layout.custom_dialog, null)
+        val mBuilder = AlertDialog.Builder(this)
+            .setView(mDialogView)
+            .setTitle("메세지 보내기")
+
+        val mAlertDialog = mBuilder.show()
+
+        val textArea = mAlertDialog.findViewById<EditText>(R.id.sendTextArea)
+        // 보내기 버튼 눌렀을 때
+        val btn = mAlertDialog.findViewById<Button>(R.id.sendTextBtn)
+        btn?.setOnClickListener {
+
+            // 내 uid와 닉네임, 보내는 텍스트 내용을 담음
+            val msgModel = MsgModel(uid, MyInfo.myNickname, textArea!!.text.toString())
+
+            // 내가 클릭한 사람의 uid 값 밑에 보낸사람과 메세지 값 넣기
+            // .push()를 쓰면 누를 때마다 쌓임 (같은 정보여도)
+            FirebaseRef.userMsgRef.child(getterUid).push().setValue(msgModel)
+
+            mAlertDialog.dismiss() // Dialog 끄기
+        }
 
     }
 
